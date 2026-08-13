@@ -42,7 +42,7 @@
             pkgs.stdenv.cc.cc
             pkgs.zlib
           ]
-        }:/run/opengl-driver/lib:LD_LIBRARY_PATH
+        }:/run/opengl-driver/lib:LD_LIBRARY_PATH"
 
         if [ ! -d env ]; then
           uv venv --python ${pkgs.python313}/bin/python env
