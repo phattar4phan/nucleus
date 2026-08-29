@@ -23,6 +23,9 @@
         cudaPackages.cudatoolkit
         cudaPackages.cudnn
 
+        gcc
+        glibc
+        glibc.dev
         stdenv.cc.cc
         zlib
         openssl
@@ -31,9 +34,15 @@
 
       shellHook = ''
         export UV_PROJECT_ENVIRONMENT=env
+        export TRITON_LIBCUDA_PATH="/run/opengl-driver/lib"
 
         export CUDA_HOME=${pkgs.cudaPackages.cudatoolkit}
         export CUDA_PATH=${pkgs.cudaPackages.cudatoolkit}
+
+        export TMPDIR="$PWD/.nix-tmp"
+        mkdir -p "$TMPDIR"
+        export TRITON_CACHE_DIR="$PWD/.triton-cache"
+        mkdir -p "$TRITON_CACHE_DIR"
 
         export LD_LIBRARY_PATH="${
           pkgs.lib.makeLibraryPath [
@@ -42,7 +51,7 @@
             pkgs.stdenv.cc.cc
             pkgs.zlib
           ]
-        }:/run/opengl-driver/lib:LD_LIBRARY_PATH"
+        }:/run/opengl-driver/lib:$LD_LIBRARY_PATH"
 
         if [ ! -d env ]; then
           uv venv --python ${pkgs.python313}/bin/python env
