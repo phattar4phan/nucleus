@@ -1,0 +1,102 @@
+{
+    "Escherichia coli": [
+        "GCF_003018035.1",
+        "GCF_048571525.1"
+    ],
+    "Bacillus subtilis": [
+        "GCF_051904005.1",
+        "GCF_041053155.1"
+    ],
+    "Staphylococcus aureus": [
+        "GCF_004136255.1",
+        "GCF_045345275.1"
+    ],
+    "Pseudomonas aeruginosa": [
+        "GCF_060446265.1",
+        "GCF_029916825.1"
+    ],
+    "Salmonella enterica": [
+        "GCF_022533545.1",
+        "GCF_003325135.1"
+    ],
+    "Mycobacterium tuberculosis": [
+        "GCF_977011575.1",
+        "GCF_002116775.1"
+    ],
+    "Streptococcus pneumoniae": [
+        "GCF_900476505.1",
+        "GCF_033145555.1"
+    ],
+    "Vibrio cholerae": [
+        "GCF_053220585.1",
+        "GCF_009763665.1"
+    ],
+    "Helicobacter pylori": [
+        "GCF_055395275.1",
+        "GCF_006338045.1"
+    ],
+    "Clostridium botulinum": [
+        "GCF_007833375.1",
+        "GCF_003017335.1"
+    ],
+    "Listeria monocytogenes": [
+        "GCF_018604305.1",
+        "GCF_018336635.1"
+    ],
+    "Neisseria meningitidis": [
+        "GCF_049190845.1",
+        "GCF_002073675.2"
+    ],
+    "Campylobacter jejuni": [
+        "GCF_900638185.1",
+        "GCF_001951235.1"
+    ],
+    "Corynebacterium glutamicum": [
+        "GCF_001687645.1",
+        "GCF_018884245.1"
+    ],
+    "Agrobacterium tumefaciens": [
+        "GCF_002591665.3",
+        "GCF_025560285.1"
+    ],
+    "Thermus thermophilus": [
+        "GCF_007165405.1",
+        "GCF_007165645.1"
+    ],
+    "Deinococcus radiodurans": [
+        "GCF_965136095.1",
+        "GCF_041878445.1"
+    ],
+    "Synechococcus elongatus": [
+        "GCF_014698895.1",
+        "GCF_050422935.1"
+    ],
+    "Chlamydia trachomatis": [
+        "GCF_047420705.1",
+        "GCF_047421435.1"
+    ],
+    "Methanobrevibacter smithii": [
+        "GCF_964306185.1",
+        "GCF_964305765.1"
+    ],
+    "Legionella pneumophila": [
+        "GCF_964264325.1",
+        "GCF_055381875.1"
+    ],
+    "Proteus mirabilis": [
+        "GCF_059637885.1",
+        "GCF_033170425.1"
+    ],
+    "Lactobacillus plantarum": [
+        "GCF_041531555.1",
+        "GCF_013155145.1"
+    ],
+    "Vibrio vulnificus": [
+        "GCF_001675245.1",
+        "GCF_008693685.1"
+    ],
+    "Rhizobium leguminosarum": [
+        "GCF_052947275.1",
+        "GCF_052946915.1"
+    ]
+}
