@@ -216,3 +216,27 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# nix cache
+.nix-tmp
+
+# pytorch cache
+.triton-cache
+
+# datasets
+dataset/
+dataset.zip
+
+# generated files
+*.npy
+*.fna
+mapped.json
+*.bin
+
+# models
+checkpoints/
+*.pt
+*.pth
+*.safetensors
+*.onnx
+*.onnx.data
