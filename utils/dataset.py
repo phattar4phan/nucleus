@@ -15,11 +15,10 @@ load_dotenv()
 
 NCBI_API_KEY = os.getenv("NCBI_API_KEY")
 
-# load accessions into refseqs variable
+# load organism then flatten
 with open("refseq.json", "r", encoding="utf-8") as refseq:
     data = json.load(refseq)
-    
-refseqs = data["accessions"]
+refseqs = [accession for accessions in data.values() for accession in accessions]
 
 # NCBI REST API endpoint
 # https://www.ncbi.nlm.nih.gov/datasets/docs/v2/api/rest-api/#post-/genome/download
@@ -31,7 +30,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# tempfile for merge assembly_data_report.jsonl
+# tempfile for merging assembly_data_report.jsonl
 assembly = tempfile.NamedTemporaryFile(mode="wb", delete=False)
 assembly_report_path = assembly.name
 assembly.close()
@@ -41,11 +40,14 @@ assembly.close()
 # as I would only keep the first dataset_catalog.json
 catalog_written = False
 
+# duplicate-guarding
+written_names = set()
+
 try:
     with zipfile.ZipFile("dataset.zip", "w", zipfile.ZIP_DEFLATED) as output:
         for i in range(0, len(refseqs), 100):
             batch = refseqs[i:i+100]
-            print(f'[requested]: {i+1}-{i+len(batch)}/{len(refseqs)}')
+            print(f'[requested]: {i+1}-{i+len(batch)}/{len(refseqs)}', end='', flush=True)
             
             payload = {
                 "accessions": batch,
@@ -58,9 +60,9 @@ try:
             max_retries = 5
             for attempt in range(1, max_retries+1):
                 try:
-                    print(f'[attempt]: {attempt}/{max_retries}')
+                    print(f'\r[attempt]: {attempt}/{max_retries}', end='', flush=True)
                     
-                    # send POST req
+                    # send POST request
                     response = requests.post(
                         endpoint,
                         headers=headers,
@@ -69,20 +71,20 @@ try:
                         timeout=(30, 1800)
                     )
                     
-                    # if error (!= 200) print the error statement
+                    # if error, print the error statement
                     if response.status_code != 200:
-                        print(f'[error]: {response.status_code}, retrying...')
+                        print(f'\r[error]: {response.status_code}, retrying...', end='', flush=True)
                         continue
-                        
-                    # save streamed response to temp file
+                    
+                    # save streamed response to tmp file
                     with tempfile.NamedTemporaryFile(suffix=".zip") as temp:
                         for chunk in response.iter_content(chunk_size=1024*1024):
                             if chunk:
                                 temp.write(chunk)
-                                
+                            
                         temp.flush()
                         
-                        # read the temp zio
+                        # read the temp zip
                         with zipfile.ZipFile(temp.name, "r") as input:
                             for name in input.namelist():
                                 if name.endswith("/"):
@@ -121,7 +123,9 @@ try:
                                         catalog_written = True
                                     continue
                                 
-                                # copy everything else
+                                # copy everything else:
+                                if name in written_names:
+                                    continue
                                 with input.open(name) as source:
                                     with output.open(name, "w") as destination:
                                         while True:
@@ -131,20 +135,20 @@ try:
                                                 break
                                             
                                             destination.write(chunk)
-                    print(f'{Fore.LIGHTCYAN_EX}[completed]{Fore.RESET}: {i+1}-{i+len(batch)}/{len(refseqs)}')
+                                written_names.add(name)
+                    print(f'{Fore.LIGHTCYAN_EX}[completed]{Fore.RESET}: {i+1}-{i+len(batch)}/{len(refseqs)}', end='', flush=True)
                     break
-
                 except (
                     requests.exceptions.RequestException,
                     zipfile.BadZipFile,
                     OSError,
                     EOFError
                 ) as e:
-                    print(f'[failed]: {e}\nretrying...')
+                    print(f'\r[failed]: {e}, retrying...', end='', flush=True)
                     
                     if attempt == max_retries:
-                        print(f'[failed]: permanently.')
-
+                        print(f'[failed]: permanently.', end='', flush=True)
+                        
         # merge assembly report
         with open(assembly_report_path, "rb") as source:
             with output.open("ncbi_dataset/data/assembly_data_report.jsonl", "w") as destination:
@@ -155,10 +159,10 @@ try:
                         break
                     
                     destination.write(chunk)
-                
+                    
 finally:
-    # remove temp merged report file
+    # remove temp file
     if os.path.exists(assembly_report_path):
         os.remove(assembly_report_path)
-        
-print('Done! Saved to dataset.zip')
+
+print(f'\n[done]: saved to dataset.zip')
